@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My New Hugo Site</title>
+    <link>https://charbs123-sys.github.io/</link>
+    <description>Recent content on My New Hugo Site</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 12 Jan 2025 16:29:09 +1100</lastBuildDate>
+    <atom:link href="https://charbs123-sys.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Intuitively understanding Decision Trees</title>
+      <link>https://charbs123-sys.github.io/posts/my-first-post/</link>
+      <pubDate>Sun, 12 Jan 2025 16:29:09 +1100</pubDate>
+      <guid>https://charbs123-sys.github.io/posts/my-first-post/</guid>
+      <description>&lt;h1 id=&#34;what-are-decision-trees&#34;&gt;What are decision trees&lt;/h1&gt;&#xA;&lt;p&gt;Decision trees are a simple structure predicting different outcomes (regions) given the&#xA;input satisfies a set of criterion. They generally are poor as a standalone technique however lead&#xA;to more powerful drivers of prediction (Random Forest and GBM) through some modification. We will use a regression&#xA;tree meaning the response variable $y$ will be continuous in nature.&lt;/p&gt;&#xA;&lt;p&gt;The final model will have a set of nodes $i$ which each have a (not necessarily unique) threshold value $t_i$&#xA;based on a feature dimension $d_i$. For a new input $x$, we choose the same feature dimension to compare against&#xA;$t_i$, we move down the tree based on the result of the comparison. Finally, when no more decisions are&#xA;made and a &amp;rsquo;leaf node&amp;rsquo; (node without any children) has been reached we would like to record the decision&#xA;making process as a region. Each region $R$ is a final output $x$ and records the&#xA;collection of decisions for which $x$ is compared to $t_i$.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

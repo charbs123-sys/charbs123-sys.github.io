@@ -1,0 +1,448 @@
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html
+  class="not-ready lg:text-base"
+  style="--bg: #faf8f1"
+  lang="en-us"
+  dir="ltr"
+>
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  
+  <title>Intuitively understanding Decision Trees - My New Hugo Site</title>
+
+  
+  <meta name="theme-color" />
+
+  
+  
+  
+  
+  <meta name="description" content="What are decision trees
+Decision trees are a simple structure predicting different outcomes (regions) given the
+input satisfies a set of criterion. They generally are poor as a standalone technique however lead
+to more powerful drivers of prediction (Random Forest and GBM) through some modification. We will use a regression
+tree meaning the response variable $y$ will be continuous in nature.
+The final model will have a set of nodes $i$ which each have a (not necessarily unique) threshold value $t_i$
+based on a feature dimension $d_i$. For a new input $x$, we choose the same feature dimension to compare against
+$t_i$, we move down the tree based on the result of the comparison. Finally, when no more decisions are
+made and a &rsquo;leaf node&rsquo; (node without any children) has been reached we would like to record the decision
+making process as a region. Each region $R$ is a final output $x$ and records the
+collection of decisions for which $x$ is compared to $t_i$." />
+  <meta name="author" content="My New Hugo Site" />
+  
+
+  
+  
+  
+  
+  
+  
+  <link rel="preload stylesheet" as="style" href="https://charbs123-sys.github.io/main.min.css" />
+
+  
+  
+  
+  
+  
+  <link rel="preload" as="image" href="https://charbs123-sys.github.io/theme.png" />
+
+  
+  
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <script
+    defer
+    src="https://charbs123-sys.github.io/highlight.min.js"
+    onload="hljs.initHighlightingOnLoad();"
+  ></script>
+  
+
+  
+  
+  
+  
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.css"
+  integrity="sha384-3UiQGuEI4TTMaFmGIZumfRPtfKQ3trwQE2JgosJxCnGmQpL/lJdjpcHkaaFwHlcI"
+  crossorigin="anonymous"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js"
+  integrity="sha384-G0zcxDFp5LWZtDuRMnBkk3EphCK1lhEf4UEyEM693ka574TZGwo4IWwS6QLzM/2t"
+  crossorigin="anonymous"
+></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js"
+  integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+  crossorigin="anonymous"
+></script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () =>
+    renderMathInElement(document.body, {
+      
+      
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+      ],
+      
+      throwOnError: false,
+    }),
+  );
+</script>
+
+  
+  
+  
+
+  
+  <link
+    rel="icon"
+    href="https://charbs123-sys.github.io/favicon.ico"
+  />
+  <link
+    rel="apple-touch-icon"
+    href="https://charbs123-sys.github.io/apple-touch-icon.png"
+  />
+
+  
+  <meta name="generator" content="Hugo 0.140.2">
+
+  
+  
+  
+  
+  
+  
+  <meta itemprop="name" content="Intuitively understanding Decision Trees">
+  <meta itemprop="description" content="What are decision trees Decision trees are a simple structure predicting different outcomes (regions) given the input satisfies a set of criterion. They generally are poor as a standalone technique however lead to more powerful drivers of prediction (Random Forest and GBM) through some modification. We will use a regression tree meaning the response variable $y$ will be continuous in nature.
+The final model will have a set of nodes $i$ which each have a (not necessarily unique) threshold value $t_i$ based on a feature dimension $d_i$. For a new input $x$, we choose the same feature dimension to compare against $t_i$, we move down the tree based on the result of the comparison. Finally, when no more decisions are made and a ’leaf node’ (node without any children) has been reached we would like to record the decision making process as a region. Each region $R$ is a final output $x$ and records the collection of decisions for which $x$ is compared to $t_i$.">
+  <meta itemprop="datePublished" content="2025-01-12T16:29:09+11:00">
+  <meta itemprop="dateModified" content="2025-01-12T16:29:09+11:00">
+  <meta itemprop="wordCount" content="1209">
+  
+  <meta property="og:url" content="https://charbs123-sys.github.io/posts/my-first-post/">
+  <meta property="og:site_name" content="My New Hugo Site">
+  <meta property="og:title" content="Intuitively understanding Decision Trees">
+  <meta property="og:description" content="What are decision trees Decision trees are a simple structure predicting different outcomes (regions) given the input satisfies a set of criterion. They generally are poor as a standalone technique however lead to more powerful drivers of prediction (Random Forest and GBM) through some modification. We will use a regression tree meaning the response variable $y$ will be continuous in nature.
+The final model will have a set of nodes $i$ which each have a (not necessarily unique) threshold value $t_i$ based on a feature dimension $d_i$. For a new input $x$, we choose the same feature dimension to compare against $t_i$, we move down the tree based on the result of the comparison. Finally, when no more decisions are made and a ’leaf node’ (node without any children) has been reached we would like to record the decision making process as a region. Each region $R$ is a final output $x$ and records the collection of decisions for which $x$ is compared to $t_i$.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-01-12T16:29:09+11:00">
+    <meta property="article:modified_time" content="2025-01-12T16:29:09+11:00">
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Intuitively understanding Decision Trees">
+  <meta name="twitter:description" content="What are decision trees Decision trees are a simple structure predicting different outcomes (regions) given the input satisfies a set of criterion. They generally are poor as a standalone technique however lead to more powerful drivers of prediction (Random Forest and GBM) through some modification. We will use a regression tree meaning the response variable $y$ will be continuous in nature.
+The final model will have a set of nodes $i$ which each have a (not necessarily unique) threshold value $t_i$ based on a feature dimension $d_i$. For a new input $x$, we choose the same feature dimension to compare against $t_i$, we move down the tree based on the result of the comparison. Finally, when no more decisions are made and a ’leaf node’ (node without any children) has been reached we would like to record the decision making process as a region. Each region $R$ is a final output $x$ and records the collection of decisions for which $x$ is compared to $t_i$.">
+
+  
+  
+
+  
+  <link rel="canonical" href="https://charbs123-sys.github.io/posts/my-first-post/" />
+  
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header class="mx-auto flex h-[4.5rem] max-w-[--w] px-8 lg:justify-center">
+  <div class="relative z-50 ltr:mr-auto rtl:ml-auto flex items-center">
+    <a class="-translate-y-[1px] text-2xl font-medium" href="https://charbs123-sys.github.io/"
+      >My New Hugo Site</a
+    >
+    <div
+      class="btn-dark text-[0] ltr:ml-4 rtl:mr-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.png)_left_center/_auto_theme('spacing.6')_no-repeat] [transition:_background-position_0.4s_steps(5)] dark:[background-position:right]"
+      role="button"
+      aria-label="Dark"
+    ></div>
+  </div>
+
+  <div
+    class="btn-menu relative z-50 ltr:-mr-8 rtl:-ml-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+    role="button"
+    aria-label="Menu"
+  ></div>
+
+  
+
+  <script>
+    
+    const htmlClass = document.documentElement.classList;
+    setTimeout(() => {
+      htmlClass.remove('not-ready');
+    }, 10);
+
+    
+    const btnMenu = document.querySelector('.btn-menu');
+    btnMenu.addEventListener('click', () => {
+      htmlClass.toggle('open');
+    });
+
+    
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const lightBg = '#faf8f1'.replace(/"/g, '');
+    const setDark = (isDark) => {
+      metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
+      htmlClass[isDark ? 'add' : 'remove']('dark');
+      localStorage.setItem('dark', isDark);
+    };
+
+    
+    const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (htmlClass.contains('dark')) {
+      setDark(true);
+    } else {
+      const darkVal = localStorage.getItem('dark');
+      setDark(darkVal ? darkVal === 'true' : darkScheme.matches);
+    }
+
+    
+    darkScheme.addEventListener('change', (event) => {
+      setDark(event.matches);
+    });
+
+    
+    const btnDark = document.querySelector('.btn-dark');
+    btnDark.addEventListener('click', () => {
+      setDark(localStorage.getItem('dark') !== 'true');
+    });
+  </script>
+
+  <div
+    class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"
+  >
+    
+    
+
+    
+  </div>
+</header>
+
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100vh-9rem)] max-w-[--w] px-8 pb-16 pt-14 dark:prose-invert"
+    >
+      
+
+<article>
+  <header class="mb-14">
+    <h1 class="!my-0 pb-2.5">Intuitively understanding Decision Trees</h1>
+
+    
+    <div class="text-xs antialiased opacity-60">
+      
+      <time>Jan 12, 2025</time>
+      
+      
+      
+      
+    </div>
+    
+  </header>
+
+  <section><h1 id="what-are-decision-trees">What are decision trees</h1>
+<p>Decision trees are a simple structure predicting different outcomes (regions) given the
+input satisfies a set of criterion. They generally are poor as a standalone technique however lead
+to more powerful drivers of prediction (Random Forest and GBM) through some modification. We will use a regression
+tree meaning the response variable $y$ will be continuous in nature.</p>
+<p>The final model will have a set of nodes $i$ which each have a (not necessarily unique) threshold value $t_i$
+based on a feature dimension $d_i$. For a new input $x$, we choose the same feature dimension to compare against
+$t_i$, we move down the tree based on the result of the comparison. Finally, when no more decisions are
+made and a &rsquo;leaf node&rsquo; (node without any children) has been reached we would like to record the decision
+making process as a region. Each region $R$ is a final output $x$ and records the
+collection of decisions for which $x$ is compared to $t_i$.</p>
+<p>These regions are important as they parition the output space into a limited number of results. We therefore
+estimate the output of region j using the following
+$$
+w_j = \frac{\sum_{n=1}^N y_n \mathbb I (x_n \in R_j)}{\sum_{n=1}^N \mathbb I(x_n \in R_j)}
+$$</p>
+<p>$\mathbb I (x_n \in R_j)$ represents the indicator function attaining 1 if the n&rsquo;th row of the input matrix
+reaches $R_j$, and $y_n$ is the output of the response variable. The above equation is very intuitive since
+summing over all rows in a region is simply a count of how many times our data results in that region being chosen.
+Therefore $w_j$ is just the average over all response variables whose input lead to region $R_j$.</p>
+<p>Therefore we define the functional form of a regression tree as
+$$
+f(x;\theta) = \sum_{j=1}^J w_j \mathbb I(x \in R_j)
+$$
+so that $\theta = {(R_j, w_j) : j = 1 : J}$ where $J$ is the number of nodes and $\theta$ is the pair of
+regions with predicted outputs.</p>
+<h1 id="fitting-decision-trees">Fitting decision trees</h1>
+<p>The next step is more difficult and involves estimating the
+feature to split on $j_i$ and a threshold for that feature $t_i$. Ultimately, we would like to minimize the
+non-differentiable loss
+$$
+L(\theta) = \sum_{n=1}^N l(y_n, f(x_n;\theta))
+$$
+for an arbitrary loss $l(y_n, f(x_n;\theta))$. minimizing $L(\theta)$ means choosing the appropriate parameters
+contained in $\theta$ so that the difference between the actual value $y_n$ and our predicted value
+$f(x_n;\theta)$ is reduced based
+on a chosen metric. For the sake of brevity we will not look at why the loss $L(\theta)$ is non-differentiable,
+however, some motivation is attributed to learning a discrete tree structure meaning finding
+an optimal decision tree is np-hard (Cannot be solved efficiently yet).</p>
+<p>An appropriate proxy was found to be
+$$
+(j_t,t_i) = \arg \min_{j \in {1,\cdots,D}} \min_{t \in T_j} \frac{|D_{i,L}(j,t)|}{|D|} c(D_{i,L}(j,t)) +
+\frac{|D_{i,R}(j,t)|}{|D|} c(D_{i,R}(j,t)) \quad (1.1)
+$$
+for a cost function $c()$. The above seems somewhat daunting however we will explore the different pieces below.</p>
+<h2 id="inner-expression">Inner expression</h2>
+<p>The inner expression
+$$
+\frac{|D_{i,L}(j,t)|}{|D|} c(D_{i,L}(j,t)) + \frac{|D_{i,R}(j,t)|}{|D|} c(D_{i,R}(j,t))
+$$
+is characterized by two sets of weighted cost functions. Note that $D_{i,L}(j,t)$ is the set of data points
+satisfying the threshold value $x_{n,j} \leq t$. This means that for the n&rsquo;th example that at $d_i$ we compare
+the value of the feature against a threshold. So $|D_{i,L}(j,t)|$ is the number of data points satisfying
+this condition and $|D_{i,R}(j,t)|$ is the number of points satisfying $x_{n,j} &gt; t$. As a clarifying remark
+$x_n$ is (generally) a vector containing a number of features whilst $x_{n,j}$ is a data point for an individual
+feature. Therefore, if we divide by $|D|$ (total number of data points) we find that the weights of the cost
+functions lie in the interval $[0,1]$.</p>
+<p>The cost function $c()$ is chosen by us and is generally substituted for the Mean Squared Error (MSE)
+$$
+c(D_i) = \frac{1}{|D|} \sum_{n \in D_i} (y_n - \overline{y})^2
+$$
+where $\overline{y}$ is the mean of response variables reaching node i.</p>
+<p>Put together we have a weighted summation of cost functions. Each cost function represents the magnitude of
+difference from the predicted to the average class label for each node depending on whether we move left or
+right along the node.</p>
+<h2 id="choosing-a-threshold-and-decision-feature">Choosing a threshold and decision feature</h2>
+<p>$\min_{t \in T_j}$ attempts to find the best threshold for each feature j. $T_j$ is written as the set of values
+${x_{nj}}$ (example for the n&rsquo;th row and j&rsquo;th feature), a decision rule can then be set on a sorted set of
+unique values. We
+generally want binary splits to avoid data fragmentation (splitting the data into too many nodes), therefore
+a range can be chosen appropriately for each feature j. So for example if we have $T_j$ = {5, 10, 15 } then
+we can consider thresholds $t_j &lt; 5$, or $t_j &lt; 10$ etc. After this we choose the best feature dimension j
+minimizing equation 1.1.</p>
+<p>Ultimately, we &lsquo;greedily&rsquo; choose a threshold for each feature then choose $j$ which appropriately minimizes
+the weighted sum of costs overall. Note that this only finds the pair $(j_i, t_i)$ meaning we must minimize
+for every node i.</p>
+<h2 id="how-many-nodes">How many nodes?</h2>
+<p>If we let the tree grow without restriction then a training error of 0 can be achieved. Eventually, we attain
+a region for each data point meaning the model will overfit. Pruning, or more specifically post-pruning (as
+opposed to pre-pruning) allows the decision tree to grow to max depth then remove branches until the model is not
+overfitting anymore. Multiple means for appropriate pruning exist and we can
+specifically use Cost complexity pruning
+which chooses some subtree t minimizing a condition and adding to a new tree. Eventually, the tree with the
+best accuracy is chosen. As an alternative pre-pruning can be used which simply stops execution based on some
+heuristic, for example if the number of data points in a node becomes too small.</p>
+<h1 id="why-a-decision-tree">Why a decision tree?</h1>
+<p>Decision trees are generally implemented because of automatic variable selection, ease to interpret
+robustness and no need for standardization. They are great as a basic model that may lead to insights by
+questioning why a threshold and feature for a given node was chosen.</p>
+<p>As with all models there are plenty of drawbacks that can be interpreted from the math. Of course the main
+one being that a greedy process is taken to determine the thresholds and decision rules. Namely, we cannot
+optimize $L(\theta)$ and so the chosen proxy uses a greedy procedure for threshold and feature selection without
+considering what will occur at the next node. Accuracy is hit, reinforcing the aforementioned point that decision
+trees are poor as a standalone model.</p>
+<h1 id="conclusions">Conclusions</h1>
+<p>Provided above is a bare bones explanation of the inner workings regarding a decision tree. There are multiple
+other processes which can also be used to further increase the accuracy of decision trees which have not been
+presented here. Plenty of resources exist to use decision trees for classification and have therefore
+not been presented but a general adaptation would be to reform the cost function from MSE to the Gini index.
+Ultimately, the above hopes to give a greater intuition on the inner workings of decision trees and how they
+come to life in the presence of data.</p>
+</section>
+
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+</article>
+
+
+    </main>
+
+    <footer
+  class="mx-auto flex h-[4.5rem] max-w-[--w] items-center px-8 text-xs uppercase tracking-wider opacity-60"
+>
+  <div class="mr-auto">
+  
+    &copy; 2025
+    <a class="link" href="https://charbs123-sys.github.io/">My New Hugo Site</a>
+  
+  </div>
+  <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank"
+    >powered by hugo️️</a
+  >️
+  <a
+    class="link"
+    href="https://github.com/nanxiaobei/hugo-paper"
+    rel="noopener"
+    target="_blank"
+    >hugo-paper</a
+  >
+</footer>
+
+  </body>
+</html>
